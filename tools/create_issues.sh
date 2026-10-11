@@ -3,7 +3,7 @@
 # Usage : tools/create_issues.sh issues.txt "v0.1.0 MVP"
 # Format de issues.txt (une issue par ligne) : label|titre|description   (# = commentaire)
 set -euo pipefail
-FILE="${1:?fichier d'issues attendu}"
+FILE="${1:?fichier issues.txt attendu}"
 MILESTONE="${2:-v0.1.0 MVP}"
 gh api "repos/{owner}/{repo}/milestones" -f title="$MILESTONE" >/dev/null 2>&1 || true
 for l in "must:0E8A16" "should:FBCA04" "could:C5DEF5" "security:B60205" "docs:0075CA"; do

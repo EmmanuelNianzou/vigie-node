@@ -1,0 +1,22 @@
+name: Bug
+description: Signaler un comportement incorrect
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: "Que s'est-il passé ?"
+      description: "Comportement observé et comportement attendu."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: "Version (tag ou commit)"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Étapes de reproduction et logs"
+      render: shell

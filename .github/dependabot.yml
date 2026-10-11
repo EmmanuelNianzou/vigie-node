@@ -1,0 +1,10 @@
+# Ajoute un bloc par écosystème utilisé : maven, npm, pip, docker, gradle, cargo, etc.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]

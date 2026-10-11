@@ -1,0 +1,27 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build-esp32:
+    runs-on: ubuntu-latest
+    container: espressif/idf:v6.0   # tag vérifié sur Docker Hub ; sinon utilise la dernière version stable
+    steps:
+      - uses: actions/checkout@v4   # dernière version majeure ; sera épinglée par SHA (S1.12)
+      - name: Build
+        shell: bash
+        run: |
+          . $IDF_PATH/export.sh
+          idf.py build
+      - name: Size report
+        shell: bash
+        run: |
+          . $IDF_PATH/export.sh
+          idf.py size | tee size.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: size-report
+          path: size.txt

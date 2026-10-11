@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+# Ajoute ici (avec un commentaire qui justifie) les faux positifs, par exemple une clé publique de test :
+# [allowlist]
+# description = "clés publiques de développement"
+# paths = ['''components/mqtt_service/certs/ca_chain\.pem''']

@@ -1,0 +1,16 @@
+name: Fonctionnalité
+description: Proposer une amélioration
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: "Besoin"
+      description: "Quel problème cela résout-il ?"
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: "Critères d'acceptation"
+      description: "Comment saura-t-on que c'est terminé ?"

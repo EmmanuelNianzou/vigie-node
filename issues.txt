@@ -1,0 +1,13 @@
+# label|titre|description
+must|S1.2 Socle pur et tests sur PC|filters, vigie_common, host_unit, CI host-tests
+must|S1.3 Machine à états d'alarme (TDD)|alarm_fsm pur C, 8 tests
+must|S1.4 HAL sorties : LED, buzzers, relais|état inactif forcé au démarrage
+must|S1.5 HAL entrées et capteurs|bouton, PIR, IR, ADC1, DHT11
+must|S1.6 HAL OLED|3 pages
+must|S1.7 Services, événements, tâches|alarme complète sans réseau
+must|S1.8 Configuration, Wi-Fi, provisioning, SNTP|aucun secret en dur
+must|S1.9 MQTT TLS et contrat de télémétrie|schéma JSON + publication
+should|S1.10 Commandes signées|nonce, expiration, HMAC
+should|S1.11 OTA signée, santé, rollback|image altérée refusée
+must|S1.12 Documentation et release v0.1.0|guides, GIF, tag
+security|S1.x Revue de sécurité du MVP|STRIDE, gitleaks, scan de ports

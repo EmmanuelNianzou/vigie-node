@@ -1,0 +1,14 @@
+build/
+build-*/
+sdkconfig
+sdkconfig.old
+sdkconfig.release
+managed_components/
+.cache/
+.vscode/
+*.pem
+*.key
+*.p12
+.env
+/certs/
+!components/mqtt_service/certs/ca_chain.pem

@@ -1,16 +1,13 @@
-# Raccourcis : une seule commande pour vérifier avant de commiter.
-.PHONY: build flash monitor test format lint
-build:
-	idf.py build
-flash:
-	idf.py flash monitor
-monitor:
-	idf.py monitor
+# Raccourcis. `make test` suffit pour le coeur C pur ; `make build` demande arduino-cli (facultatif : l'IDE compile aussi).
+FQBN ?= esp32:esp32:esp32
+.PHONY: test build format lint
 test:
 	cmake -S test_apps/host_unit -B build-host -DCMAKE_BUILD_TYPE=Debug
 	cmake --build build-host
 	ctest --test-dir build-host --output-on-failure
+build:
+	arduino-cli compile --fqbn $(FQBN) --output-dir build vigie_node
 format:
-	find components main test_apps -name '*.[ch]' -print0 | xargs -0 clang-format -i
+	find vigie_node/src test_apps -name '*.[ch]' -print0 | xargs -0 clang-format -i
 lint:
-	cppcheck --enable=warning,style --error-exitcode=1 -I components --suppress=missingIncludeSystem components main
+	cppcheck --enable=warning,style --error-exitcode=1 --suppress=missingIncludeSystem vigie_node/src

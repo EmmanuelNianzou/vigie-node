@@ -1,9 +1,7 @@
 build/
 build-*/
-sdkconfig
-sdkconfig.old
-sdkconfig.release
-managed_components/
+*.elf
+*.map
 .cache/
 .vscode/
 *.pem
@@ -11,4 +9,4 @@ managed_components/
 *.p12
 .env
 /certs/
-!components/mqtt_service/certs/ca_chain.pem
+arduino_secrets.h

@@ -19,22 +19,22 @@ alarm_output_t alarm_fsm_step(alarm_fsm_t *f, const alarm_input_t *in, uint32_t 
 {
     const alarm_state_t previous = f->state;
     const bool detect = in->pir || in->obstacle;
-    const uint32_t elapsed = now_ms - f->t_enter_ms; /* non signé : correct même au débordement */
+    const uint32_t elapsed = now_ms - f->t_enter_ms;
 
     if (in->sensor_fault && f->state != ALARM_FAULT) {
-        enter(f, ALARM_FAULT, now_ms); /* 9 */
+        enter(f, ALARM_FAULT, now_ms);
     } else {
         switch (f->state) {
         case ALARM_DISARMED:
             if (in->btn_short || in->cmd_arm) {
-                enter(f, ALARM_ARMED, now_ms); /* 1 */
+                enter(f, ALARM_ARMED, now_ms);
             }
             break;
         case ALARM_ARMED:
             if (in->btn_short || in->cmd_disarm) {
-                enter(f, ALARM_DISARMED, now_ms); /* 2 */
+                enter(f, ALARM_DISARMED, now_ms);
             } else if (detect) {
-                enter(f, ALARM_PRE_ALERT, now_ms); /* 3 */
+                enter(f, ALARM_PRE_ALERT, now_ms);
             }
             break;
         case ALARM_PRE_ALERT:
@@ -45,29 +45,29 @@ alarm_output_t alarm_fsm_step(alarm_fsm_t *f, const alarm_input_t *in, uint32_t 
                     f->released = true;
                 }
                 if (detect && f->released) {
-                    enter(f, ALARM_ALERT, now_ms); /* 5 : seconde détection */
+                    enter(f, ALARM_ALERT, now_ms);
                 } else if (elapsed >= f->cfg.t_confirm_ms) {
-                    enter(f, ALARM_ARMED, now_ms); /* 4 : pas de confirmation */
+                    enter(f, ALARM_ARMED, now_ms);
                 }
             }
             break;
         case ALARM_ALERT:
             if (in->cmd_disarm) {
-                enter(f, ALARM_DISARMED, now_ms); /* 8 */
+                enter(f, ALARM_DISARMED, now_ms);
             } else if (in->btn_short) {
-                enter(f, ALARM_MUTED, now_ms); /* 6 */
+                enter(f, ALARM_MUTED, now_ms);
             }
             break;
         case ALARM_MUTED:
             if (in->cmd_disarm) {
                 enter(f, ALARM_DISARMED, now_ms);
             } else if (elapsed >= f->cfg.t_mute_ms) {
-                enter(f, ALARM_ARMED, now_ms); /* 7 */
+                enter(f, ALARM_ARMED, now_ms);
             }
             break;
         case ALARM_FAULT:
             if (!in->sensor_fault && (in->btn_long || in->cmd_disarm)) {
-                enter(f, ALARM_DISARMED, now_ms); /* 10 */
+                enter(f, ALARM_DISARMED, now_ms);
             }
             break;
         }

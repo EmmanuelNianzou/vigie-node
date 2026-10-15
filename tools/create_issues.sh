@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 # Crée labels, jalon et issues d'un projet à partir d'un fichier texte.
-# Usage : tools/create_issues.sh issues.txt "v0.1.0 MVP"
-# Format de issues.txt (une issue par ligne) : label|titre|description   (# = commentaire)
 set -euo pipefail
 FILE="${1:?fichier issues.txt attendu}"
 MILESTONE="${2:-v0.1.0 MVP}"

@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-/* Moyenne exponentielle : lisse un signal bruité. alpha dans ]0;1] (grand = réactif). */
+/* Moyenne exponentielle : lisse le signal bruité */
 typedef struct {
     float alpha;
     float value;
@@ -16,7 +16,7 @@ typedef struct {
 void ema_init(ema_t *f, float alpha);
 float ema_update(ema_t *f, float sample);
 
-/* Hystérésis : passe à true au-dessus de `high`, repasse à false sous `low`. */
+/*  passe à true au-dessus de `high`, repasse à false sous `low`. */
 typedef struct {
     float low;
     float high;

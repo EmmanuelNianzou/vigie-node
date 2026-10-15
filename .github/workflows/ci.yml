@@ -13,12 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: arduino/setup-arduino-cli@v2
-      - name: Install ESP32 core
+      - run: bash tools/install_deps.sh
+      - name: Interdire setInsecure (la vérification TLS doit rester active)
         run: |
-          arduino-cli core update-index --additional-urls "$ESP32_INDEX"
-          arduino-cli core install esp32:esp32 --additional-urls "$ESP32_INDEX"
+          if grep -rn 'setInsecure' vigie_node; then
+            echo "setInsecure() est interdit"; exit 1
+          fi
       - name: Compile the sketch
-        run: arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir build vigie_node
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 --warnings more --output-dir build vigie_node
       - uses: actions/upload-artifact@v4
         with:
           name: firmware

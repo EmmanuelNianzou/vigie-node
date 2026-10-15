@@ -11,7 +11,7 @@ jobs:
   build-esp32:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: arduino/setup-arduino-cli@v2
       - name: Install ESP32 core
         run: |
@@ -19,7 +19,7 @@ jobs:
           arduino-cli core install esp32:esp32 --additional-urls "$ESP32_INDEX"
       - name: Compile the sketch
         run: arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir build vigie_node
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: firmware
           path: build/*.bin

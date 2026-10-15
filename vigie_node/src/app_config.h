@@ -26,3 +26,8 @@
 #define LONG_PRESS_MS 1500
 #define ALARM_T_CONFIRM_MS 5000
 #define ALARM_T_MUTE_MS 60000
+
+#define NTP_SERVER "pool.ntp.org"
+#define MQTT_BROKER_HOST "broker.lan"
+#define MQTT_BROKER_PORT 8883
+#define TELEMETRY_PERIOD_S 10

@@ -29,11 +29,28 @@ static void test_median3_rejects_outlier(void)
     TEST_ASSERT_EQUAL_INT32(7, median3(7, 7, 7));
 }
 
+static void test_debounce_ignores_bounces_and_accepts_stable_change(void)
+{
+    debounce_t d;
+    debounce_init(&d, false, 4);
+    const bool bounce[] = {true, false, true, true, false, true, true, true, false};
+    for (size_t i = 0; i < sizeof(bounce) / sizeof(bounce[0]); i++) {
+        TEST_ASSERT_FALSE(debounce_update(&d, bounce[i])); /* jamais 4 identiques d'affilée */
+    }
+    for (int i = 0; i < 3; i++) {
+        TEST_ASSERT_FALSE(debounce_update(&d, true));
+    }
+    TEST_ASSERT_TRUE(debounce_update(&d, true));  /* 4e échantillon : changement accepté */
+    TEST_ASSERT_TRUE(debounce_update(&d, true));  /* reste stable */
+    TEST_ASSERT_TRUE(debounce_update(&d, false)); /* un seul échantillon faux : ignoré */
+}
+
 int main(void)
 {
     UNITY_BEGIN();
     RUN_TEST(test_ema_primes_then_smooths);
     RUN_TEST(test_hysteresis_does_not_chatter);
     RUN_TEST(test_median3_rejects_outlier);
+    RUN_TEST(test_debounce_ignores_bounces_and_accepts_stable_change);
     return UNITY_END();
 }

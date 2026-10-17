@@ -1,49 +1,41 @@
 #include "src/app_config.h"
+#include "src/alarm_service/alarm_service.h"
 #include "src/hal_inputs/hal_inputs.h"
 #include "src/hal_oled/hal_oled.h"
 #include "src/hal_outputs/hal_outputs.h"
-#include "src/hal_sensors/hal_sensors.h"
+#include "src/sensor_service/sensor_service.h"
+#include "src/ui_service/ui_service.h"
+#include "src/vigie_common/vigie_state.h"
 
-static const char *NAMES[INPUT_COUNT] = {"PIR", "IR", "BOUTON"};
+static void log_stacks(void) // marge de pile de chaque tâche, pour les essais
+{
+    static const char *names[] = {"sensor", "alarm", "ui"};
+    for (const char *n : names) {
+        TaskHandle_t h = xTaskGetHandle(n);
+        if (h) Serial.printf("pile %-6s : %u octets libres (min)\n", n, (unsigned)uxTaskGetStackHighWaterMark(h));
+    }
+}
 
 void setup()
 {
     Serial.begin(115200);
     delay(200);
     Serial.println("VIGIE NODE boot " FW_VERSION);
+    vigie_state_init();
     hal_outputs_init();
     hal_inputs_init();
-    adc_init();
-    if (!hal_oled_init()) {
-        Serial.println("OLED non initialisée");
-    }
+    hal_oled_init();
+    sensor_service_start();
+    alarm_service_start();
+    ui_service_start();
 }
 
 void loop()
 {
     static uint32_t last = 0;
-    static bool prev[INPUT_COUNT] = {false, false, false};
-    bool act[INPUT_COUNT];
-    hal_inputs_poll(act);
-    for (int i = 0; i < INPUT_COUNT; i++) {
-        if (act[i] != prev[i]) {
-            Serial.printf("entree %s -> %d\n", NAMES[i], (int)act[i]);
-            prev[i] = act[i];
-        }
-    }
-    if (millis() - last >= 2000) {
+    if (millis() - last > 10000) {
         last = millis();
-        float t = 0, h = 0;
-        const dht_status_t st = dht11_read(PIN_DHT11, &t, &h);
-        const int ldr = adc_read_raw(PIN_LDR), pot = adc_read_raw(PIN_POT);
-        char l[24];
-        hal_oled_clear();
-        snprintf(l, sizeof(l), "T=%.1fC H=%.0f%%", t, h);
-        hal_oled_print(0, l);
-        snprintf(l, sizeof(l), "LDR=%d POT=%d", ldr, pot);
-        hal_oled_print(1, l);
-        hal_oled_print(2, st == DHT_OK ? "DHT11: OK" : "DHT11: erreur");
-        hal_oled_flush();
+        log_stacks();
     }
-    delay(INPUT_POLL_MS);
+    vTaskDelay(pdMS_TO_TICKS(100));
 }
